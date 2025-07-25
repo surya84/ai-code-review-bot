@@ -1,4 +1,4 @@
-package reviewer
+package main
 
 import (
 	"code-reviewer-bot/config"
