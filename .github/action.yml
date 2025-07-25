@@ -11,7 +11,7 @@ inputs:
 
 runs:
   using: "docker"
-  image: "Dockerfile"
+  image: "cmd/reviewer/Dockerfile"
   entrypoint: "/app/ai-code-reviewer-bot"
   args:
     - "--config=/app/config/config.yaml"
