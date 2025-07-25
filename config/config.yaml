@@ -1,0 +1,70 @@
+# Configuration for the AI Code Reviewer Bot
+vcs:
+  provider: ${VCS_PROVIDER}
+  github:
+    token: ${GITHUB_TOKEN} # This is automatically provided by GitHub Actions
+  gitea: 
+    base_url: "https://gitea.com"
+    token: ${GITEA_TOKEN}
+
+llm:
+  provider: ${LLM_PROVIDER}
+  model_name: ${LLM_MODEL_NAME} 
+  #model_name: "openai/gpt-3.5-turbo" # The specific model identifier for OpenAI
+
+  
+  api_key: ${API_KEY}
+
+database:
+  host: ${DB_HOST}
+  port: ${DB_PORT}
+  user: ${DB_USER}
+  password: ${DB_PASSWORD}
+  dbname: ${DB_NAME}
+
+review_prompt_file: "/app/config/prompt_base.txt"
+
+# The prompt template sent to the LLM for code review.
+review_prompt: >
+  **Output Format:**
+  Provide your response as a valid JSON array of objects. Each object must have:
+  - "line_content": (string) The **full, exact text** of the single line of code you are commenting on, including the leading '+'.
+  - "message": (string) Your concise review comment for that specific line.
+
+  **Example JSON Response:**
+  [
+    {
+      "line_content": "+	fmt.Println(\"App Secret:\", ApPSecReT)",
+      "message": "Typo in variable name: 'ApPSecReT' should be 'AppSecret'. Also, logging secrets is a major security risk and should be avoided."
+    }
+  ]
+  
+  **Code Snippet to Review:**
+  ```diff
+  {{.CodeSnippet}}
+  ```
+  
+architecure_review_prompt: |
+  Project Structure Analysis:
+  %s
+
+  Architecture Score: %d/10
+  Missing Layers: %s
+
+  Generate a JSON response with comments for architecture review:
+
+  {
+    "comments": [
+      {
+        "body": "Architecture review comment with findings and recommendations"
+      }
+    ]
+  }
+
+  The comment should:
+  1. Summarize the architecture review findings
+  2. List any missing architectural layers
+  3. Provide specific recommendations for improvement
+  4. Explain the importance of modular architecture
+
+  If the score is 8+ and no critical layers are missing, provide positive feedback. Keep comments constructive and actionable.

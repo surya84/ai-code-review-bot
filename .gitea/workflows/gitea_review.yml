@@ -1,0 +1,41 @@
+name: Gitea AI Code Review (Self-Review)
+
+on:
+  pull_request:
+    types: [opened, synchronized]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest # This label should match your runner's labels
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Run AI Code Reviewer
+        env:
+          # --- VCS Configuration ---
+          # We set the GITEA_TOKEN which the Go app will use.
+          GITEA_TOKEN: ${{ secrets.ACCESS_TOKEN_GITEA }}
+          # The context variables are provided by the Gitea runner.
+          REPO_OWNER: ${{ gitea.repository_owner }}
+          REPO_NAME: ${{ gitea.repository_name }}
+          PR_NUMBER: ${{ gitea.pull_request.number }}
+
+          # --- LLM Configuration ---
+          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER }}
+          LLM_MODEL_NAME: ${{ secrets.LLM_MODEL_NAME }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          # Set the provider in the config file to "gitea" for this run
+          sed -i 's/provider: "github"/provider: "gitea"/' config/config.yaml
+          go run ./cmd/reviewer
