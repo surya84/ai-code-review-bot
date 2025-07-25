@@ -1,4 +1,4 @@
-package reviewer
+package main
 
 import (
 	"code-reviewer-bot/internal/models"
@@ -27,6 +27,10 @@ var (
 	repoName   string
 	prNumber   int
 )
+
+func main() {
+	Execute()
+}
 
 var rootCmd = &cobra.Command{
 	Use:   "code-reviewer-bot",
