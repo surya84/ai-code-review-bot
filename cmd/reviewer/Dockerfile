@@ -5,13 +5,13 @@ RUN apk add --no-cache git
 
 WORKDIR /app
 
-# Copy go.mod and go.sum from parent directory
-COPY ../../go.mod ../../go.sum ./
+# Copy go.mod and go.sum from root (since build context is repo root)
+COPY go.mod go.sum ./
 
 RUN go mod download
 
-# Copy all source code from repo root
-COPY ../../ ./
+# Copy full source code from root
+COPY . .
 
 WORKDIR /app/cmd/reviewer
 
@@ -26,6 +26,7 @@ RUN apk --no-cache add ca-certificates git
 WORKDIR /app
 
 COPY --from=builder /app/cmd/reviewer/reviewer-bot .
+
 COPY --from=builder /app/config ./config
 
 RUN chmod +x reviewer-bot
