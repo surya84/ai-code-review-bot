@@ -8,8 +8,24 @@ inputs:
     required: true
 
 runs:
-  using: 'docker'
-  image: ../..                      
-  dockerfile: cmd/reviewer/Dockerfile
-  args:
-    - "--config=/app/config/config.yaml"
+  using: composite
+  steps:
+    - name: Checkout (the caller repo)
+      uses: actions/checkout@v4
+
+    - name: Build reviewer Docker image (root context)
+      shell: bash
+      run: docker build -t reviewer-bot -f cmd/reviewer/Dockerfile .
+
+    - name: Run reviewer bot
+      shell: bash
+      run: |
+        docker run --rm \
+          -e GITHUB_TOKEN="${{ inputs.GITHUB_TOKEN }}" \
+          -e API_KEY="${{ inputs.API_KEY }}" \
+          -e PR_NUMBER="${{ env.PR_NUMBER }}" \
+          -e GITHUB_REPOSITORY="${{ env.GITHUB_REPOSITORY }}" \
+          -e LLM_PROVIDER="${{ env.LLM_PROVIDER }}" \
+          -e LLM_MODEL_NAME="${{ env.LLM_MODEL_NAME }}" \
+          -e VCS_PROVIDER="${{ env.VCS_PROVIDER }}" \
+          reviewer-bot --config=/app/config/config.yaml
