@@ -15,7 +15,7 @@ runs:
 
     - name: Build reviewer Docker image
       shell: bash
-      run: docker build -t reviewer-bot -f cmd/reviewer/Dockerfile .
+      run: docker build -f ./cmd/reviewer/Dockerfile -t reviewer-bot:latest .
 
     - name: Run reviewer bot container
       shell: bash
