@@ -1,5 +1,5 @@
-name: AI Code Reviewer Bot
-description: Run reviewer CLI via Docker
+name: AI Code Reviewer
+description: LLM-powered code review for PRs
 
 inputs:
   GITHUB_TOKEN:
@@ -8,26 +8,5 @@ inputs:
     required: true
 
 runs:
-  using: "composite"
-  steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
-
-    - name: Build Docker Image
-      shell: bash
-      run: |
-        echo "Building Docker image..."
-        docker build -t reviewer-bot -f Dockerfile.cmd .
-
-    - name: Run Reviewer Bot
-      shell: bash
-      run: |
-        docker run --rm \
-          -e GITHUB_TOKEN="${{ inputs.GITHUB_TOKEN }}" \
-          -e API_KEY="${{ inputs.API_KEY }}" \
-          -e PR_NUMBER="${{ env.PR_NUMBER }}" \
-          -e GITHUB_REPOSITORY="${{ env.GITHUB_REPOSITORY }}" \
-          -e LLM_PROVIDER="${{ env.LLM_PROVIDER }}" \
-          -e LLM_MODEL_NAME="${{ env.LLM_MODEL_NAME }}" \
-          -e VCS_PROVIDER="${{ env.VCS_PROVIDER }}" \
-          reviewer-bot --config=/app/config/config.yaml
+  using: docker
+  image: Dockerfile.cmd
