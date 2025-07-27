@@ -1,0 +1,17 @@
+# ai-code-review-bot/action.yaml
+name: Run Self Reviewer via Docker
+description: Uses cmd/reviewer Dockerfile to run reviewer
+
+inputs:
+  GITHUB_TOKEN:
+    required: true
+  OPENAI_API_KEY:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: ./github/actions/self-review
+      with:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        API_KEY: ${{ inputs.API_KEY }}
