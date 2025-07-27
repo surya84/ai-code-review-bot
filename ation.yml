@@ -1,17 +1,30 @@
-# ai-code-review-bot/action.yaml
-name: Run Self Reviewer via Docker
-description: Uses cmd/reviewer Dockerfile to run reviewer
+name: AI Code Reviewer Bot
+description: Runs PR reviews via cmd/reviewer Dockerfile
 
 inputs:
   GITHUB_TOKEN:
     required: true
-  OPENAI_API_KEY:
+  API_KEY:
     required: true
 
 runs:
   using: "composite"
   steps:
-    - uses: ./github/actions/self-review
-      with:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        API_KEY: ${{ inputs.API_KEY }}
+    - name: Checkout source
+      uses: actions/checkout@v3
+
+    - name: Build reviewer Docker image
+      run: docker build -t reviewer-bot -f cmd/reviewer/Dockerfile .
+
+    - name: Run reviewer bot container
+      run: |
+        docker run --rm \
+          -e GITHUB_TOKEN="${{ inputs.GITHUB_TOKEN }}" \
+          -e API_KEY="${{ inputs.API_KEY }}" \
+          -e PR_NUMBER="${{ env.PR_NUMBER }}" \
+          -e GITHUB_REPOSITORY="${{ env.GITHUB_REPOSITORY }}" \
+          -e LLM_PROVIDER="${{ env.LLM_PROVIDER }}" \
+          -e LLM_MODEL_NAME="${{ env.LLM_MODEL_NAME }}" \
+          -e VCS_PROVIDER="${{ env.VCS_PROVIDER }}" \
+          reviewer-bot \
+          --config=/app/config/config.yaml
