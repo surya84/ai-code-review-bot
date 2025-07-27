@@ -8,19 +8,21 @@ inputs:
     required: true
 
 runs:
-  using: composite
+  using: "composite"
   steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Build reviewer Docker image
-      shell: bash
-      working-directory: ${{ github.workspace }}
-      run: docker build -t reviewer-bot -f ./Dockerfile.cmd .
-
-    - name: Run reviewer bot
+    - name: Build Docker Image
       shell: bash
       run: |
+        echo "Building Docker image..."
+        docker build -t reviewer-bot -f Dockerfile.cmd .
+
+    - name: Run Reviewer Bot
+      shell: bash
+      run: |
+        echo "Running reviewer bot..."
         docker run --rm \
           -e GITHUB_TOKEN="${{ inputs.GITHUB_TOKEN }}" \
           -e API_KEY="${{ inputs.API_KEY }}" \
