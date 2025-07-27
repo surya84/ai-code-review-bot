@@ -31,4 +31,4 @@ COPY --from=builder /app/config ./config
 
 RUN chmod +x reviewer-bot
 
-ENTRYPOINT ["./reviewer-bot"]
+ENTRYPOINT ["./app/reviewer-bot"]
