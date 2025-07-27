@@ -12,7 +12,7 @@ COPY . .
 WORKDIR /app/cmd/reviewer
 
 # Cross-compile for Linux
-RUN GOOS=linux GOARCH=amd64 go build -o /app/reviewer-bot .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags '-w -s' -o reviewer-bot .
 
 # Final image
 FROM alpine:latest
