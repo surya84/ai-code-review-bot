@@ -1,12 +1,6 @@
 name: AI Code Reviewer Bot
 description: Runs PR reviews via cmd/reviewer Dockerfile
 
-inputs:
-  GITHUB_TOKEN:
-    required: true
-  API_KEY:
-    required: true
-
 runs:
   using: "composite"
   steps:
