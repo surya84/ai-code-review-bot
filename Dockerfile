@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1
-
 # ==== Build Stage ====
 FROM golang:1.24.4-alpine AS builder
 
