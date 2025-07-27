@@ -10,12 +10,18 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout source
+    
+    - name: Checkout reviewer bot repo
       uses: actions/checkout@v3
+      with:
+        repository: ${{ github.repository }}
+        path: ./reviewer-bot
 
+    
     - name: Build reviewer Docker image
       shell: bash
-      run: docker build -f ./cmd/reviewer/Dockerfile -t reviewer-bot:latest .
+      run: |
+        docker build -t reviewer-bot -f reviewer-bot/cmd/reviewer/Dockerfile reviewer-bot
 
     - name: Run reviewer bot container
       shell: bash
