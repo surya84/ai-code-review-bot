@@ -5,13 +5,15 @@ RUN apk add --no-cache git
 
 WORKDIR /app
 
-# Copy source
+COPY go.mod go.sum ./
+
+RUN go mod download
+
 COPY . .
 
-# Set working directory to where main.go is located
 WORKDIR /app/cmd/reviewer
 
-# Cross-compile for Linux
+# Build binary
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags '-w -s' -o reviewer-bot .
 
 # Final image
@@ -21,7 +23,8 @@ RUN apk --no-cache add ca-certificates git
 
 WORKDIR /app
 
-COPY --from=builder /app/reviewer-bot .
+COPY --from=builder /app/cmd/reviewer/reviewer-bot .
+
 COPY --from=builder /app/config ./config
 
 RUN chmod +x reviewer-bot
