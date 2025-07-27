@@ -5,9 +5,15 @@ RUN apk add --no-cache git
 
 WORKDIR /app
 
-COPY ./go.mod ./go.sum ./
+# Copy go.mod first
+COPY ../../go.mod ./
+
+# Copy go.sum if it exists, otherwise create empty file
+COPY ../../go.su[m] ./
+RUN touch go.sum
 
 RUN go mod download
+
 
 COPY . .
 
