@@ -15,7 +15,8 @@ runs:
 
     - name: Build reviewer Docker image
       shell: bash
-      run: docker build -t reviewer-bot -f Dockerfile.cmd .
+      working-directory: ${{ github.workspace }}
+      run: docker build -t reviewer-bot -f ./Dockerfile.cmd .
 
     - name: Run reviewer bot
       shell: bash
