@@ -6,7 +6,8 @@ RUN apk add --no-cache git
 WORKDIR /app
 
 # Copy go.mod first
-COPY go.mod ./
+COPY ../../go.mo[d] ./
+RUN touch go.mod
 
 # Copy go.sum if it exists, otherwise create empty file
 COPY ../../go.su[m] ./
