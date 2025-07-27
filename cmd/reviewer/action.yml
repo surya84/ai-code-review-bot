@@ -10,12 +10,12 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Checkout (the caller repo)
+    - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Build reviewer Docker image (root context)
+    - name: Build reviewer Docker image
       shell: bash
-      run: docker build -t reviewer-bot -f cmd/reviewer/Dockerfile .
+      run: docker build -t reviewer-bot -f Dockerfile.cmd .
 
     - name: Run reviewer bot
       shell: bash
