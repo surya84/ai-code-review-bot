@@ -107,7 +107,7 @@ func initGenkit(ctx context.Context, cfg *config.Config) (*genkit.Genkit, error)
 func getPRDetailsFromEnv(provider string, baseUrl string) (*models.PRDetails, error) {
 	var repoSlug string
 	var parts []string
-	if provider == "github" {
+	if provider == "Github" {
 		repoSlug = os.Getenv(constants.GITHUB_REPOSITORY)
 	} else if provider == constants.GITEA {
 		repoSlug = os.Getenv(constants.GITEA_REPOSITORY)
