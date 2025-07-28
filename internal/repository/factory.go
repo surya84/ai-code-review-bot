@@ -10,7 +10,7 @@ import (
 // This factory function is primarily used by the CLI tool to select the correct provider.
 func New(ctx context.Context, cfg *config.VCSConfig) (VcsRepository, error) {
 	switch cfg.Provider {
-	case "github":
+	case "Github":
 		if cfg.GitHub.Token == "" {
 			return nil, fmt.Errorf("github provider selected but GITHUB_TOKEN is not configured")
 		}
