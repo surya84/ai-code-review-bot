@@ -12,7 +12,7 @@ import (
 func CloneRepoIfNotExists(baseURL, token, owner, repo string) (string, error) {
 	localPath := fmt.Sprintf("./repos/%s_%s", owner, repo)
 	if _, err := os.Stat(localPath); os.IsNotExist(err) {
-		cloneURL := fmt.Sprintf("https://%s@%s/%s/%s.git", token, baseURL, owner, repo)
+		cloneURL := fmt.Sprintf("https://x-access-token:%s@%s/%s/%s.git", token, baseURL, owner, repo)
 		fmt.Println("Cloning:", cloneURL)
 		cmd := exec.Command("git", "clone", cloneURL, localPath)
 		cmd.Stdout = os.Stdout
